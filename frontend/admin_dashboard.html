@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - Scholars Crate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Libre+Baskerville&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f8ff;
+      padding-top: 70px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header.main-header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h1 {
+      font-size: 1.5rem;
+      color: white;
+      margin: 0;
+      font-weight: 600;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    .dashboard-container {
+      padding: 30px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      flex: 1;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #4b0082;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    #providerList {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .provider-card {
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .provider-card p {
+      margin: 10px 0;
+      font-size: 15px;
+    }
+
+    .provider-card button {
+      padding: 8px 16px;
+      margin-top: 10px;
+      border: none;
+      border-radius: 5px;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .approve-btn {
+      background-color: #28a745;
+    }
+
+    .reject-btn {
+      background-color: #dc3545;
+      margin-left: 10px;
+    }
+
+    footer {
+      background-color: #4b006d;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    @media screen and (max-width: 768px) {
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .logo-area h1 {
+        font-size: 16px;
+      }
+
+      #providerList {
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      #providerList {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="logo-area">
+      <img src="images/logo.png" alt="logo" class="logo-img">
+      <h1>Scholars Crate</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Logout</a>
+    </nav>
+  </header>
+
+  <div class="dashboard-container">
+    <h2>Pending Provider Requests</h2>
+    <div id="providerList">
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+  <script>
+    async function fetchPendingProviders() {
+      const res = await fetch('http://localhost:5000/api/admin/pending-providers');
+      const data = await res.json();
+
+      const container = document.getElementById("providerList");
+      container.innerHTML = "";
+
+      if (data.length === 0) {
+        container.innerHTML = "<p style='text-align:center;'>No pending providers.</p>";
+        return;
+      }
+
+      data.forEach(provider => {
+        const card = document.createElement("div");
+        card.className = "provider-card";
+        card.innerHTML = `
+          <p><strong>Organization:</strong> ${provider.organizationName}</p>
+          <p><strong>Email:</strong> ${provider.email}</p>
+          <p><strong>Phone:</strong> ${provider.phone}</p>
+          <button class="approve-btn" onclick="approveProvider('${provider._id}', this)">Approve</button>
+          <button class="reject-btn" onclick="rejectProvider('${provider._id}', this)">Reject</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function approveProvider(id, button) {
+      const res = await fetch(`http://localhost:5000/api/admin/approve-provider/${id}`, {
+        method: 'PUT'
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        button.parentElement.remove();
+      } else {
+        alert(result.error || 'Approval failed');
+      }
+    }
+
+    async function rejectProvider(id, button) {
+      const res = await fetch(`http://localhost:5000/api/admin/reject-provider/${id}`, {
+        method: 'DELETE'
+      });
+
+      const result = await res.json();
+      if (res.ok) {
+        button.parentElement.remove();
+      } else {
+        alert(result.error || 'Rejection failed');
+      }
+    }
+
+    window.onload = fetchPendingProviders;
+  </script>
+
+</body>
+</html>

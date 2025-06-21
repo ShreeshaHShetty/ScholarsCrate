@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Uploaded Scholarships</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f8ff;
+      padding-top: 70px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    html, body {
+        height: 100%;
+        margin: 0;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .wrapper {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    main {
+        flex: 1;
+        padding: 30px 20px;
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h2 {
+      font-size: 1.5rem;
+      color: white;
+      margin: 0;
+      font-weight: 600;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 30px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #4b0082;
+    }
+
+    .scholarship-card {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 25px;
+    }
+
+    .scholarship-card p {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        max-width: 100%;
+    }
+
+
+    .scholarship-card strong {
+      display: inline-block;
+      margin-top: 10px;
+    }
+
+    .actions {
+      margin-top: 15px;
+    }
+
+    .actions button {
+      margin-right: 10px;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 5px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .edit-btn {
+      background-color: #4b006d;
+      color: white;
+    }
+
+    .delete-btn {
+      background-color: darkred;
+      color: white;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        width: 90%;
+        max-width: 600px;
+        position: relative;
+        max-height: 78vh;
+        overflow-y: auto;
+    }
+
+
+    .modal-content h3 {
+      margin-bottom: 20px;
+      color: #4b0082;
+    }
+
+    .modal-content label {
+      margin-top: 10px;
+      display: block;
+      font-weight: bold;
+    }
+
+    .modal-content input,
+    .modal-content textarea,
+    .modal-content select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px; right: 15px;
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    button[type="submit"] {
+      background-color: #4b006d;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      font-family: 'Libre Baskerville', serif;
+    }
+  </style>
+</head>
+<body>
+    <div class="wrapper">
+  <header>
+    <div class="logo-area">
+      <img src="images/logo.png" alt="Logo">
+      <h2>Scholars Crate</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="provider_dashboard.html">Home</a>
+      <a class="active" href="uploaded_scholarships.html">Uploaded Scholarships</a>
+      <a href="provider_profile.html">Profile</a>
+      <a href="index.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Your Uploaded Scholarships</h2>
+    <div id="scholarshipContainer"></div>
+  </main>
+  <div class="modal" id="editModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3>Edit Scholarship</h3>
+      <form id="editForm">
+        <input type="hidden" id="editId" />
+        <label>Scholarship Name</label>
+        <input type="text" id="editName" required />
+
+        <label>Description</label>
+        <textarea id="editDescription" rows="4" required></textarea>
+
+        <label>Logo URL</label>
+        <input type="url" id="editLogo" required />
+
+        <label>Education Level</label>
+        <select id="editLevel" onchange="renderMarksInputs()" required>
+          <option value="PG">PG</option>
+          <option value="UG">UG</option>
+          <option value="PU">PU</option>
+        </select>
+
+        <div id="editMarksContainer"></div>
+
+        <label>Age</label>
+        <input type="number" id="editAge" />
+
+        <label>Gender</label>
+        <select id="editGender">
+            <option value="">Select Gender</option>
+            <option value="male">Male</option>
+            <option value="female">Female</option>
+        </select>
+
+        <label>Maximum Income</label>
+        <input type="number" id="editMaxIncome" />
+
+        <label>Caste</label>
+        <input type="text" id="editCaste" />
+
+        <label>Religion</label>
+        <input type="text" id="editReligion" />
+
+        <label>State</label>
+        <input type="text" id="editState" />
+
+        <label>Apply Link</label>
+        <input type="url" id="editLink" required />
+
+        <label>Deadline</label>
+        <input type="date" id="editDeadline" required />
+
+        <button type="submit">Save Changes</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+  <script>
+    const container = document.getElementById("scholarshipContainer");
+    const modal = document.getElementById("editModal");
+    const form = document.getElementById("editForm");
+    const email = localStorage.getItem("providerEmail");
+
+    let scholarships = [];
+
+    async function loadScholarships() {
+      try {
+        const res = await fetch(`http://localhost:5000/api/scholarships/by-provider?email=${email}`);
+        scholarships = await res.json();
+
+        container.innerHTML = "";
+        scholarships.forEach(s => {
+          const div = document.createElement("div");
+          div.className = "scholarship-card";
+          div.innerHTML = `
+            <h3>${s.scholarshipName}</h3>
+            <p><strong>Description:</strong> ${s.description}</p>
+            <p><strong>Deadline:</strong> ${new Date(s.deadline).toLocaleDateString()}</p>
+            <div class="actions">
+              <button class="edit-btn" onclick='openEdit(${JSON.stringify(s)})'>Edit</button>
+              <button class="delete-btn" onclick='deleteScholarship("${s._id}")'>Delete</button>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+      } catch {
+        container.innerHTML = "<p style='color:red;'>Failed to load scholarships.</p>";
+      }
+    }
+
+    function openEdit(data) {
+      document.getElementById("editId").value = data._id;
+      document.getElementById("editName").value = data.scholarshipName;
+      document.getElementById("editDescription").value = data.description;
+      document.getElementById("editLogo").value = data.logoUrl;
+      document.getElementById("editLevel").value = data.educationLevel;
+      document.getElementById("editAge").value = data.age || "";
+      document.getElementById("editGender").value = data.gender || "";
+      document.getElementById("editMaxIncome").value = data.maxIncome || "";
+      document.getElementById("editCaste").value = data.caste || "";
+      document.getElementById("editReligion").value = data.religion || "";
+      document.getElementById("editState").value = data.state || "";
+      document.getElementById("editLink").value = data.applyLink;
+      document.getElementById("editDeadline").value = new Date(data.deadline).toISOString().split('T')[0];
+
+      renderMarksInputs(data.educationLevel, data.marks);
+      modal.style.display = "flex";
+    }
+
+    function closeModal() {
+      modal.style.display = "none";
+    }
+
+    window.onclick = function (event) {
+        const modal = document.getElementById("editModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+
+
+    function renderMarksInputs(level = document.getElementById("editLevel").value, marks = {}) {
+      const container = document.getElementById("editMarksContainer");
+      container.innerHTML = "";
+
+      let inputs = [];
+      if (level === "PG") inputs = ["Current Percentage", "UG Percentage", "PU Percentage", "10th Percentage"];
+      else if (level === "UG") inputs = ["Current Percentage", "PU Percentage", "10th Percentage"];
+      else if (level === "PU") inputs = ["Current Percentage", "10th Percentage"];
+
+      inputs.forEach(label => {
+        const key = Object.keys(marks).find(k => k.toLowerCase().includes(label.toLowerCase().split(" ")[0])) || label;
+        container.innerHTML += `
+          <label>${label}</label>
+          <input type="number" name="marks" data-key="${label}" value="${marks[key] || ''}" />
+        `;
+      });
+    }
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const id = document.getElementById("editId").value;
+
+      const marksInputs = document.querySelectorAll("input[name='marks']");
+      const marks = {};
+      marksInputs.forEach(input => {
+        const key = input.getAttribute("data-key");
+        marks[key] = input.value;
+      });
+
+      const updated = {
+        scholarshipName: document.getElementById("editName").value,
+        description: document.getElementById("editDescription").value,
+        logoUrl: document.getElementById("editLogo").value,
+        educationLevel: document.getElementById("editLevel").value,
+        age: document.getElementById("editAge").value,
+        gender: document.getElementById("editGender").value,
+        maxIncome: document.getElementById("editMaxIncome").value,
+        caste: document.getElementById("editCaste").value,
+        religion: document.getElementById("editReligion").value,
+        state: document.getElementById("editState").value,
+        applyLink: document.getElementById("editLink").value,
+        deadline: document.getElementById("editDeadline").value,
+        marks
+      };
+
+      const res = await fetch(`http://localhost:5000/api/scholarships/update/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(updated)
+      });
+
+        closeModal();
+        loadScholarships();
+      
+    });
+
+    async function deleteScholarship(id) {
+      const res = await fetch(`http://localhost:5000/api/scholarships/delete/${id}`, { method: "DELETE" });
+      loadScholarships();
+    }
+
+    loadScholarships();
+  </script>
+    </div>
+</body>
+</html>

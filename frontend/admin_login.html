@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Admin Login - Scholars Crate</title>
+  <link rel="stylesheet" href="css/admin_auth.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans&family=Libre+Baskerville&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f8ff;
+      padding-top: 70px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h1 {
+      font-size: 1.5rem;
+      color: white;
+      margin: 0;
+      font-weight: 600;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      font-family: 'Libre Baskerville', serif;
+      z-index: 999;
+    }
+
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .logo-area h1 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="logo-area">
+      <img src="images/logo.png" alt="logo" class="logo-img" />
+      <h1>Scholars Crate</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="student_auth.html">Student</a>
+      <a href="provider_auth.html">Provider</a>
+      <a class="active" href="admin_login.html">Admin</a>
+    </nav>
+  </header>
+
+  <div class="auth-container" style="margin-top: 100px; max-width: 400px; margin-left: auto; margin-right: auto;">
+    <h2 style="text-align: center; color: #4b0082;">Admin Login</h2>
+    <form onsubmit="return validateAdminPIN()" style="padding: 25px;">
+      <label for="adminPin" style="font-weight: 600;">Enter Admin PIN</label>
+      <div class="password-field" style="position: relative;">
+        <input type="password" id="adminPin" required minlength="4" placeholder="Enter your PIN"
+               style="width: 100%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc;" />
+        <span class="password-toggle" onclick="togglePassword('adminPin')"
+              style="position: absolute; top: 50%; right: 10px; transform: translateY(-50%); cursor: pointer;">
+          <i class="fa-regular fa-eye" id="toggleIcon"></i>
+        </span>
+      </div>
+
+      <div class="error-message" id="adminErrorMsg" style="color: red; margin-top: 10px;"></div>
+      <button type="submit" style="width: 100%; margin-top: 20px;">Login</button>
+    </form>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/js/all.min.js"></script>
+
+  <script>
+    function togglePassword(id) {
+      const field = document.getElementById(id);
+      const icon = document.getElementById("toggleIcon");
+
+      if (field.type === "password") {
+        field.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+      } else {
+        field.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+      }
+    }
+
+    function validateAdminPIN() {
+      const pin = document.getElementById("adminPin").value;
+      const error = document.getElementById("adminErrorMsg");
+
+      const correctPIN = "1506"; // your actual admin PIN
+
+      if (pin !== correctPIN) {
+        error.textContent = "Incorrect PIN.";
+        return false;
+      }
+
+      error.textContent = "";
+      window.location.href = "admin_dashboard.html";
+      return false;
+    }
+  </script>
+</body>
+</html>

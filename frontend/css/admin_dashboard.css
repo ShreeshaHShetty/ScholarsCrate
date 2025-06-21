@@ -1,0 +1,108 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f8fa;
+}
+
+.main-header {
+  background-color: #003366;
+  color: white;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-area {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  height: 40px;
+  margin-right: 10px;
+}
+
+.nav-links a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.nav-links a.active {
+  text-decoration: underline;
+}
+
+.dashboard-container {
+  padding: 40px 60px;
+}
+
+.dashboard-container h2 {
+  font-size: 26px;
+  margin-bottom: 25px;
+  color: #003366;
+}
+
+.provider-card {
+  background-color: white;
+  padding: 20px;
+  margin-bottom: 25px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease;
+}
+
+.provider-card:hover {
+  transform: scale(1.02);
+}
+
+.provider-card p {
+  margin: 6px 0;
+  font-size: 15px;
+  color: #333;
+}
+
+.provider-card strong {
+  color: #003366;
+}
+
+.provider-card button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  margin-top: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.approve-btn {
+  background-color: #28a745;
+}
+
+.approve-btn:hover {
+  background-color: #218838;
+}
+
+.reject-btn {
+  background-color: #dc3545;
+  margin-left: 10px;
+}
+
+.reject-btn:hover {
+  background-color: #c82333;
+}
+
+footer {
+  background-color: #003366;
+  color: white;
+  padding: 15px 0;
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}

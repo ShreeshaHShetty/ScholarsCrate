@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Login / Sign Up - Scholars Crate</title>
+  <link rel="stylesheet" href="css/student_auth.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;  
+      background-color: #f8f8ff;
+      padding-top: 70px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h1 {
+      font-size: 1.5rem;
+      color: white;
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      font-family: 'Libre Baskerville', serif;
+      z-index: 999;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .logo-area h1 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-area">
+      <img src="images/logo.png" alt="logo" />
+      <h1>Scholars Crate</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a class="active" href="student_auth.html">Student</a>
+      <a href="provider_auth.html">Provider</a>
+      <a href="admin_login.html">Admin</a>
+    </nav>
+  </header>
+
+
+  <div class="auth-container">
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('login')">Login</button>
+      <button class="tab-button" onclick="showTab('signup')">Sign Up</button>
+    </div>
+
+
+    <div id="login" class="form-container active">
+      <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required placeholder="Enter your email" />
+
+        <label for="loginPassword">Password</label>
+        <div class="password-field">
+          <input type="password" id="loginPassword" required minlength="8" placeholder="Enter your password" />
+          <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('loginPassword', this)"></i>
+        </div>
+
+        <div class="error-message" id="loginError"></div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+
+    <div id="signup" class="form-container">
+      <form id="signupForm">
+        <label for="name">Name</label>
+        <input type="text" id="name" minlength="3" required placeholder="Enter your name" />
+
+        <label for="signupEmail">Email</label>
+        <input type="email" id="signupEmail" required placeholder="example@example.com" />
+
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" required pattern="^\+91\d{10}$" placeholder="+911234567890" />
+
+        <label for="dob">Date of Birth</label>
+        <input type="date" id="dob" required onchange="calculateAge()" />
+
+        <label for="age">Age</label>
+        <input type="text" id="age" readonly />
+
+        <label for="education">Education Level</label>
+        <select id="education" required onchange="handleEducationLevelChange()">
+          <option value="">--Select--</option>
+          <option value="PG">Post-Graduation</option>
+          <option value="UG">Under Graduation</option>
+          <option value="PU">Pre-University</option>
+        </select>
+
+        <div id="marksFields"></div>
+
+        <label for="gender">Gender</label>
+        <select id="gender" required>
+          <option value="">--Select--</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+        </select>
+
+        <label for="income">Annual Income</label>
+        <input type="text" id="income" required />
+
+        <label for="caste">Caste</label>
+        <input type="text" id="caste" required />
+
+        <label for="religion">Religion</label>
+        <input type="text" id="religion" required />
+
+        <label for="district">District</label>
+        <input type="text" id="district" required />
+
+        <label for="state">State</label>
+        <input type="text" id="state" required />
+
+        <label for="signupPassword">Password</label>
+        <div class="password-field">
+          <input type="password" id="signupPassword" minlength="8" required placeholder="Password" />
+          <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('signupPassword', this)"></i>
+        </div>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <div class="password-field">
+          <input type="password" id="confirmPassword" required placeholder="Confirm Password" />
+          <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('confirmPassword', this)"></i>
+        </div>
+
+        <div class="error-message" id="errorMsg"></div>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+  <script>
+    function showTab(tab) {
+      document.querySelectorAll(".form-container").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
+      document.getElementById(tab).classList.add("active");
+      event.target.classList.add("active");
+    }
+
+    function calculateAge() {
+      const dob = document.getElementById("dob").value;
+      if (dob) {
+        const birthDate = new Date(dob);
+        const age = new Date().getFullYear() - birthDate.getFullYear();
+        document.getElementById("age").value = age;
+      }
+    }
+
+    function handleEducationLevelChange() {
+      const level = document.getElementById("education").value;
+      const marksFields = document.getElementById("marksFields");
+      marksFields.innerHTML = "";
+
+      const inputs = [];
+
+      if (level === "PG") {
+        inputs.push("Current Percentage", "UG Percentage", "PU Percentage", "10th Percentage");
+      } else if (level === "UG") {
+        inputs.push("Current Percentage", "PU Percentage", "10th Percentage");
+      } else if (level === "PU") {
+        inputs.push("Current Percentage", "10th Percentage");
+      }
+
+
+      inputs.forEach(label => {
+        const lbl = document.createElement("label");
+        lbl.textContent = label;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.placeholder = label;
+        input.required = true;
+
+        marksFields.appendChild(lbl);
+        marksFields.appendChild(input);
+      });
+    }
+
+    function togglePassword(fieldId, iconElement) {
+      const field = document.getElementById(fieldId);
+      const isVisible = field.type === "text";
+      field.type = isVisible ? "password" : "text";
+      iconElement.classList.toggle("fa-eye");
+      iconElement.classList.toggle("fa-eye-slash");
+    }
+
+    // LOGIN
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const res = await fetch("http://localhost:5000/api/student/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.student) {
+        localStorage.setItem("studentData", JSON.stringify(data.student));
+        window.location.href = "student_dashboard.html";
+      } else {
+        document.getElementById("loginError").textContent = data.error || "Login failed.";
+      }
+    });
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+      const errorMsg = document.getElementById("errorMsg");
+
+      if (password !== confirmPassword) {
+        errorMsg.textContent = "Passwords do not match.";
+        return;
+      }
+      errorMsg.textContent = "";
+
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("signupEmail").value;
+      const phone = document.getElementById("phone").value;
+      const dob = document.getElementById("dob").value;
+      const age = document.getElementById("age").value;
+      const education = document.getElementById("education").value;
+      const gender = document.getElementById("gender").value;
+      const income = document.getElementById("income").value;
+      const caste = document.getElementById("caste").value;
+      const religion = document.getElementById("religion").value;
+      const district = document.getElementById("district").value;
+      const state = document.getElementById("state").value;
+
+      const marksInputs = document.querySelectorAll('#marksFields input');
+      const marksLabels = document.querySelectorAll('#marksFields label');
+      const marks = {};
+      marksInputs.forEach((input, idx) => {
+        marks[marksLabels[idx].textContent] = input.value;
+      });
+
+      const res = await fetch("http://localhost:5000/api/student/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          name, email, phone, dob, age, education,
+          gender, income, caste, religion, district, state,
+          password, marks
+        })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("studentData", JSON.stringify({
+          name, email, age, gender, education, income,
+          caste, religion, state, marks
+        }));
+        window.location.href = "student_dashboard.html";
+      } else {
+        errorMsg.textContent = data.error || "Signup failed.";
+      }
+    });
+  </script>
+</body>
+</html>

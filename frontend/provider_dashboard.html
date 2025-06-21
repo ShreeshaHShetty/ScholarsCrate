@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Provider Dashboard - Scholars Crate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f8ff;
+      padding-top: 70px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h2 {
+        font-size: 1.5rem;
+        color: white;
+        margin: 0;
+        font-weight: 600;
+        font-family: 'Libre Baskerville', serif;
+    }
+
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 30px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #4b0082;
+    }
+
+    form {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    button {
+      background-color: #4b006d;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #35004f;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      margin-top: 50px;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .logo-area h2 {
+        font-size: 16px;
+      }
+
+      main {
+        padding: 20px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-area">
+      <img src="images/logo.png" alt="Logo">
+      <h2>Scholars Crate</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="provider_dashboard.html">Home</a>
+      <a href="uploaded_scholarships.html">Uploaded Scholarships</a>
+      <a href="provider_profile.html">Profile</a>
+      <a href="index.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>Upload New Scholarship</h2>
+    <form id="scholarshipForm">
+      <label for="logo">Logo URL*</label>
+      <input type="url" id="logo" required>
+
+      <label for="scholarshipName">Scholarship Name*</label>
+      <input type="text" id="scholarshipName" required>
+
+      <label for="description">Description*</label>
+      <textarea id="description" rows="4" required></textarea>
+
+      <label for="level">Education Level*</label>
+      <select id="level" onchange="updateMarks()" required>
+        <option value="">--Select--</option>
+        <option value="PG">Post-Graduation</option>
+        <option value="UG">Under Graduation</option>
+        <option value="PU">Pre-University</option>
+      </select>
+
+      <div id="marksFields"></div>
+
+      <label for="age">Minimum Age</label>
+      <input type="number" id="age">
+
+      <label for="gender">Gender</label>
+      <select id="gender">
+        <option value="">--Select--</option>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select>
+
+
+      <label for="maxIncome">Maximum Income</label>
+      <input type="text" id="maxIncome">
+
+      <label for="caste">Caste</label>
+      <input type="text" id="caste">
+
+      <label for="religion">Religion</label>
+      <input type="text" id="religion">
+
+      <label for="state">State</label>
+      <input type="text" id="state">
+
+      <label for="applyLink">Apply Link*</label>
+      <input type="url" id="applyLink" required>
+
+      <label for="deadline">Last Date to Apply*</label>
+      <input type="date" id="deadline" required>
+
+      <button type="submit">Upload Scholarship</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+    <script>
+    function updateMarks() {
+        const level = document.getElementById("level").value;
+        const container = document.getElementById("marksFields");
+        container.innerHTML = "";
+
+        const fields = {
+        PG: ["Current Percentage", "UG Percentage", "PU Percentage", "10th Percentage"],
+        UG: ["Current Percentage", "PU Percentage", "10th Percentage"],
+        PU: ["Current Percentage", "10th Percentage"]
+        };
+
+        (fields[level] || []).forEach(label => {
+        const lbl = document.createElement("label");
+        lbl.textContent = label;
+
+        const input = document.createElement("input");
+        input.type = "number";
+        input.min = 0;
+        input.max = 100;
+        input.placeholder = label;
+        input.required = true;
+
+        container.appendChild(lbl);
+        container.appendChild(input);
+        });
+    }
+
+
+    document.getElementById("scholarshipForm").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const logoUrl = document.getElementById("logo").value;
+        const scholarshipName = document.getElementById("scholarshipName").value;
+        const description = document.getElementById("description").value;
+        const educationLevel = document.getElementById("level").value;
+        const age = document.getElementById("age").value;
+        const gender = document.getElementById("gender").value;
+        const maxIncome = document.getElementById("maxIncome").value;
+        const caste = document.getElementById("caste").value;
+        const religion = document.getElementById("religion").value;
+        const state = document.getElementById("state").value;
+        const applyLink = document.getElementById("applyLink").value;
+        const deadline = document.getElementById("deadline").value;
+
+        const marks = {};
+        const marksInputs = document.querySelectorAll("#marksFields input");
+        marksInputs.forEach(input => {
+        marks[input.placeholder] = input.value;
+        });
+
+        const providerEmail = localStorage.getItem("providerEmail"); 
+
+        const data = {
+        logoUrl,
+        providerEmail,
+        scholarshipName,
+        description,
+        educationLevel,
+        marks,
+        age,
+        gender,
+        maxIncome,
+        caste,
+        religion,
+        state,
+        applyLink,
+        deadline
+        };
+
+        try {
+        const res = await fetch("http://localhost:5000/api/scholarships/upload", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+            document.getElementById("scholarshipForm").reset();
+            document.getElementById("marksFields").innerHTML = "";
+        } else {
+            alert(result.error || "Failed to upload scholarship.");
+        }
+        } catch (err) {
+        console.error("Upload Error:", err);
+        alert("Something went wrong!");
+        }
+    });
+    </script>
+
+
+</body>
+</html>

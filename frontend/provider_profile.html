@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Provider Profile - Scholars Crate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background-color: #f8f8ff;
+      padding-top: 70px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h2 {
+      font-size: 1.5rem;
+      color: white;
+      margin: 0;
+      font-weight: 600;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    main {
+      padding: 30px 20px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #4b0082;
+    }
+
+    form {
+      background: white;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      margin-bottom: 40px;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      background-color: #4b006d;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 5px;
+      margin-top: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #35004f;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .logo-area h2 {
+        font-size: 16px;
+      }
+
+      main {
+        padding: 20px 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo-area">
+      <img src="images/logo.png" alt="Logo">
+      <h2>Scholars Crate</h2>
+    </div>
+    <nav class="nav-links">
+      <a href="provider_dashboard.html">Home</a>
+      <a href="uploaded_scholarships.html">Uploaded Scholarships</a>
+      <a class="active" href="provider_profile.html">Profile</a>
+      <a href="index.html">Logout</a>
+    </nav>
+  </header>
+
+  <main>
+    <h2>My Profile</h2>
+    <form id="profileForm">
+      <label for="orgName">Organization Name</label>
+      <input type="text" id="orgName" required />
+
+      <label for="email">Email</label>
+      <input type="email" id="email" readonly />
+
+      <label for="phone">Phone Number</label>
+      <input type="tel" id="phone" required pattern="^\+91\d{10}$" />
+
+      <button type="submit">Update Profile</button>
+    </form>
+
+    <h2>Change Password</h2>
+    <form id="passwordForm">
+      <label for="currentPassword">Current Password</label>
+      <input type="password" id="currentPassword" required />
+
+      <label for="newPassword">New Password</label>
+      <input type="password" id="newPassword" required minlength="8" />
+
+      <label for="confirmNewPassword">Confirm New Password</label>
+      <input type="password" id="confirmNewPassword" required />
+
+      <div id="passwordError" style="color: red; margin-top: 10px;"></div>
+      <div id="passwordSuccess" style="color: green; margin-top: 10px;"></div>
+
+      <button type="submit">Change Password</button>
+    </form>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+  <script>
+    const email = localStorage.getItem("providerEmail");
+
+    // Load profile
+    window.addEventListener("DOMContentLoaded", async () => {
+      if (!email) {
+        alert("No provider logged in.");
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/provider/profile?email=${email}`);
+        const data = await res.json();
+
+        if (res.ok) {
+          document.getElementById("orgName").value = data.organizationName || "";
+          document.getElementById("email").value = data.email || "";
+          document.getElementById("phone").value = data.phone || "";
+        } else {
+          alert(data.error || "Failed to load profile.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Error fetching profile.");
+      }
+    });
+
+    // Profile update
+    document.getElementById("profileForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const orgName = document.getElementById("orgName").value.trim();
+      const phone = document.getElementById("phone").value.trim();
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/provider/update?email=${email}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ organizationName: orgName, phone })
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          
+        } else {
+          alert(result.error || "Failed to update profile.");
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Server error while updating profile.");
+      }
+    });
+
+    // Password change
+    document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const currentPassword = document.getElementById("currentPassword").value.trim();
+      const newPassword = document.getElementById("newPassword").value.trim();
+      const confirmNewPassword = document.getElementById("confirmNewPassword").value.trim();
+
+      const errorDiv = document.getElementById("passwordError");
+      const successDiv = document.getElementById("passwordSuccess");
+      errorDiv.textContent = "";
+      successDiv.textContent = "";
+
+      if (!currentPassword || !newPassword || !confirmNewPassword) {
+        errorDiv.textContent = "All fields are required.";
+        return;
+      }
+
+      if (newPassword !== confirmNewPassword) {
+        errorDiv.textContent = "New password and confirmation do not match.";
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://localhost:5000/api/provider/change-password?email=${email}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ currentPassword, newPassword })
+        });
+
+        const result = await res.json();
+        if (res.ok) {
+          successDiv.textContent = "Password changed successfully!";
+          document.getElementById("passwordForm").reset();
+        } else {
+          errorDiv.textContent = result.error || "Failed to change password.";
+        }
+      } catch (err) {
+        console.error(err);
+        errorDiv.textContent = "Server error while changing password.";
+      }
+    });
+  </script>
+</body>
+</html>

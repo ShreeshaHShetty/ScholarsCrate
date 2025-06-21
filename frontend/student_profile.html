@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Open Sans', sans-serif; background: #f8f8ff; padding-top: 70px; }
+
+    header {
+      position: fixed; top: 0; width: 100%;
+      background-color: #4b006d; color: white;
+      display: flex; justify-content: space-between;
+      align-items: center; padding: 10px 20px;
+      z-index: 1000; font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area { display: flex; align-items: center; }
+    .logo-area img { height: 40px; margin-right: 10px; }
+    .logo-area h1 { font-size: 1.5rem; }
+
+    .nav-links a {
+      color: white; text-decoration: none;
+      margin: 0 12px; font-weight: 500;
+    }
+
+    main { max-width: 600px; margin: auto; padding: 30px 20px; }
+
+    form { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
+    form label { display: block; margin-top: 15px; font-weight: bold; }
+    form input, form select {
+      width: 100%; padding: 10px; margin-top: 5px;
+      border-radius: 5px; border: 1px solid #ccc;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #4b006d;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .password-field {
+      position: relative;
+    }
+
+    .password-toggle {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      font-family: 'Libre Baskerville', serif;
+      margin-top: 50px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <img src="images/logo.png" alt="Logo" />
+    <h1>Scholars Crate</h1>
+  </div>
+  <nav class="nav-links">
+    <a href="student_dashboard.html">Home</a>
+    <a class="active" href="#">Profile</a>
+    <a href="index.html">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <h2>My Profile</h2>
+  <form id="profileForm">
+    <label>Name</label>
+    <input type="text" id="name" required minlength="3" />
+
+    <label>Email</label>
+    <input type="email" id="email" disabled />
+
+    <label>Phone Number</label>
+    <input type="tel" id="phone" pattern="^\+91\d{10}$" required />
+
+    <label>Date of Birth</label>
+    <input type="date" id="dob" required onchange="calculateAge()" />
+
+    <label>Age</label>
+    <input type="number" id="age" readonly />
+
+    <label>Education Level</label>
+    <select id="education" required onchange="generateMarksFields()">
+      <option value="">--Select--</option>
+      <option value="PG">Post-Graduation</option>
+      <option value="UG">Under Graduation</option>
+      <option value="PU">Pre-University</option>
+    </select>
+
+    <div id="marksFields"></div>
+
+    <label>Gender</label>
+    <select id="gender" required>
+      <option value="">--Select--</option>
+      <option value="male">Male</option>
+      <option value="female">Female</option>
+    </select>
+
+    <label>Annual Income</label>
+    <input type="number" id="income" required />
+
+    <label>Caste</label>
+    <input type="text" id="caste" required />
+
+    <label>Religion</label>
+    <input type="text" id="religion" required />
+
+    <label>District</label>
+    <input type="text" id="district" required />
+
+    <label>State</label>
+    <input type="text" id="state" required />
+
+    <button type="submit">Update Profile</button>
+  </form>
+
+  <h2 style="margin-top: 50px;">Change Password</h2>
+  <form id="changePasswordForm">
+    <label>Current Password</label>
+    <div class="password-field">
+      <input type="password" id="currentPassword" required />
+      <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('currentPassword', this)"></i>
+    </div>
+
+    <label>New Password</label>
+    <div class="password-field">
+      <input type="password" id="newPassword" minlength="8" required />
+      <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('newPassword', this)"></i>
+    </div>
+
+    <label>Confirm New Password</label>
+    <div class="password-field">
+      <input type="password" id="confirmPassword" required />
+      <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('confirmPassword', this)"></i>
+    </div>
+
+    <button type="submit">Change Password</button>
+  </form>
+</main>
+
+<footer>
+  <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+</footer>
+
+<script>
+  const student = JSON.parse(localStorage.getItem('studentData')) || {};
+
+  const marksFieldMap = {
+    PG: ["Current Percentage", "UG Percentage", "PU Percentage", "10th Percentage"],
+    UG: ["Current Percentage", "PU Percentage", "10th Percentage"],
+    PU: ["Current Percentage", "10th Percentage"]
+  };
+
+  function populateProfile() {
+    document.getElementById("name").value = student.name || "";
+    document.getElementById("email").value = student.email || "";
+    document.getElementById("phone").value = student.phone || "";
+    document.getElementById("dob").value = student.dob || "";
+    document.getElementById("age").value = student.age || "";
+    document.getElementById("education").value = student.education || "";
+    document.getElementById("gender").value = student.gender || "";
+    document.getElementById("income").value = student.income || "";
+    document.getElementById("caste").value = student.caste || "";
+    document.getElementById("religion").value = student.religion || "";
+    document.getElementById("district").value = student.district || "";
+    document.getElementById("state").value = student.state || "";
+    generateMarksFields();
+  }
+
+  function generateMarksFields() {
+    const container = document.getElementById("marksFields");
+    container.innerHTML = "";
+    const level = document.getElementById("education").value;
+    if (!marksFieldMap[level]) return;
+
+    marksFieldMap[level].forEach(label => {
+      const value = student?.marks?.[label] || "";
+      container.innerHTML += `
+        <label>${label}</label>
+        <input type="number" required id="${label}" value="${value}" />
+      `;
+    });
+  }
+
+  function calculateAge() {
+    const dob = document.getElementById("dob").value;
+    if (!dob) return;
+    const birth = new Date(dob);
+    const today = new Date();
+    let age = today.getFullYear() - birth.getFullYear();
+    if (
+      today.getMonth() < birth.getMonth() ||
+      (today.getMonth() === birth.getMonth() && today.getDate() < birth.getDate())
+    ) {
+      age--;
+    }
+    document.getElementById("age").value = age;
+  }
+
+  document.getElementById("profileForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const updated = {
+      name: document.getElementById("name").value,
+      phone: document.getElementById("phone").value,
+      dob: document.getElementById("dob").value,
+      age: parseInt(document.getElementById("age").value),
+      education: document.getElementById("education").value,
+      gender: document.getElementById("gender").value,
+      income: parseInt(document.getElementById("income").value),
+      caste: document.getElementById("caste").value,
+      religion: document.getElementById("religion").value,
+      district: document.getElementById("district").value,
+      state: document.getElementById("state").value,
+      marks: {}
+    };
+
+    marksFieldMap[updated.education].forEach(label => {
+      updated.marks[label] = parseFloat(document.getElementById(label).value);
+    });
+
+    const res = await fetch("http://localhost:5000/api/student/update", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: student.email, updated })
+    });
+
+    const result = await res.json();
+    if (res.ok) {
+      alert("Profile updated!");
+      localStorage.setItem("studentData", JSON.stringify(result));
+      location.reload();
+    } else {
+      alert("Failed to update profile.");
+    }
+  });
+
+  document.getElementById("changePasswordForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const oldPassword = document.getElementById("currentPassword").value;
+    const newPassword = document.getElementById("newPassword").value;
+    const confirm = document.getElementById("confirmPassword").value;
+
+    if (newPassword !== confirm) return alert("Passwords do not match!");
+
+    const res = await fetch("http://localhost:5000/api/student/change-password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: student.email, oldPassword, newPassword })
+    });
+
+    const result = await res.json();
+  });
+
+  function togglePassword(id, icon) {
+    const field = document.getElementById(id);
+    const type = field.getAttribute("type") === "password" ? "text" : "password";
+    field.setAttribute("type", type);
+    icon.classList.toggle("fa-eye-slash");
+  }
+
+  populateProfile();
+</script>
+</body>
+</html>

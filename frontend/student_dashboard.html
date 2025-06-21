@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Student Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Open Sans', sans-serif;
+      background: #f8f8ff;
+      padding-top: 70px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    main {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .controls input[type="text"] {
+      width: 60%;
+    }
+
+    .controls select:nth-of-type(1) {
+      width: 20%;
+    }
+
+    .controls select:nth-of-type(2) {
+      width: 20%;
+    }
+
+    .controls input,
+    .controls select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    .scholarship-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .scholarship-card {
+      background: white;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .scholarship-card:hover {
+      transform: scale(1.02);
+    }
+
+    .scholarship-card img {
+      max-width: 80px;
+      height: auto;
+      margin-bottom: 10px;
+    }
+
+    .scholarship-card h3 {
+      margin-bottom: 8px;
+      font-size: 18px;
+    }
+
+    .scholarship-card p {
+      margin: 3px 0;
+    }
+
+    .pagination {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .pagination button {
+      padding: 8px 12px;
+      border: none;
+      background-color: #4b006d;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.6);
+    }
+
+    .modal-content {
+      background: white;
+      margin: 5% auto;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 10px;
+      position: relative;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 10px;
+    }
+
+    .modal-content p {
+      margin-bottom: 8px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #4b006d;
+    }
+
+    @media (max-width: 768px) {
+      .controls input[type="text"],
+      .controls select {
+        width: 100% !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area">
+    <img src="images/logo.png" alt="Logo" />
+    <h1>Scholars Crate</h1>
+  </div>
+  <nav class="nav-links">
+    <a class="active" href="#">Home</a>
+    <a href="student_profile.html">Profile</a>
+    <a href="index.html">Logout</a>
+  </nav>
+</header>
+
+<main>
+  <div class="controls">
+    <input type="text" id="searchInput" placeholder="Search scholarship name...">
+    <select id="filterOption">
+      <option value="all">All Scholarships</option>
+      <option value="eligible">Eligible Scholarships</option>
+    </select>
+    <select id="sortOption">
+      <option value="uploaded-desc">Date Uploaded (Newest)</option>
+      <option value="uploaded-asc">Date Uploaded (Oldest)</option>
+      <option value="alphabet-asc">Alphabet (A-Z)</option>
+      <option value="alphabet-desc">Alphabet (Z-A)</option>
+      <option value="deadline-asc">Deadline (Earliest)</option>
+      <option value="deadline-desc">Deadline (Latest)</option>
+    </select>
+  </div>
+
+  <div class="scholarship-grid" id="scholarshipGrid"></div>
+  <div class="pagination" id="pagination"></div>
+</main>
+
+<footer>
+  <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+</footer>
+
+<!-- Modal -->
+<div class="modal" id="scholarshipModal">
+  <div class="modal-content">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <div id="modalDetails"></div>
+  </div>
+</div>
+
+<script>
+  const scholarshipGrid = document.getElementById('scholarshipGrid');
+  const pagination = document.getElementById('pagination');
+  const filterOption = document.getElementById('filterOption');
+  const sortOption = document.getElementById('sortOption');
+  const searchInput = document.getElementById('searchInput');
+  const scholarshipModal = document.getElementById('scholarshipModal');
+  const modalDetails = document.getElementById('modalDetails');
+
+  let scholarships = [];
+  let filtered = [];
+  let currentPage = 1;
+  const itemsPerPage = 15;
+  const student = JSON.parse(localStorage.getItem('studentData'));
+
+  async function fetchScholarships() {
+    const res = await fetch('http://localhost:5000/api/scholarships');
+    scholarships = await res.json();
+    applyFilters();
+  }
+
+  function isEligible(s) {
+    if (s.educationLevel && s.educationLevel !== student.education) return false;
+    if (s.age != null && student.age < s.age) return false;
+    if (s.gender && s.gender !== student.gender) return false;
+    if (s.maxIncome != null && student.income > s.maxIncome) return false;
+    if (s.caste && s.caste !== student.caste) return false;
+    if (s.religion && s.religion !== student.religion) return false;
+    if (s.state && s.state !== student.state) return false;
+
+    const level = student.education;
+    const studentMarks = student.marks;
+    const scholarshipMarks = s.marks || {};
+
+    const levelFields = {
+      PG: ["Current Percentage", "UG Percentage", "PU Percentage", "10th Percentage"],
+      UG: ["Current Percentage", "PU Percentage", "10th Percentage"],
+      PU: ["Current Percentage", "10th Percentage"]
+    };
+
+    const fields = levelFields[level];
+    for (let field of fields) {
+      if (
+        scholarshipMarks[field] != null &&
+        studentMarks[field] != null &&
+        studentMarks[field] < scholarshipMarks[field]
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function applyFilters() {
+    let list = scholarships;
+
+    if (filterOption.value === 'eligible') {
+      list = list.filter(isEligible);
+    }
+
+    const search = searchInput.value.trim().toLowerCase();
+    if (search) {
+      list = list.filter(s => s.scholarshipName.toLowerCase().includes(search));
+    }
+
+    switch (sortOption.value) {
+      case 'alphabet-asc': list.sort((a, b) => a.scholarshipName.localeCompare(b.scholarshipName)); break;
+      case 'alphabet-desc': list.sort((a, b) => b.scholarshipName.localeCompare(a.scholarshipName)); break;
+      case 'uploaded-asc': list.sort((a, b) => new Date(a.uploadedAt) - new Date(b.uploadedAt)); break;
+      case 'uploaded-desc': list.sort((a, b) => new Date(b.uploadedAt) - new Date(a.uploadedAt)); break;
+      case 'deadline-asc': list.sort((a, b) => new Date(a.deadline) - new Date(b.deadline)); break;
+      case 'deadline-desc': list.sort((a, b) => new Date(b.deadline) - new Date(a.deadline)); break;
+    }
+
+    filtered = list;
+    currentPage = 1;
+    renderScholarships();
+  }
+
+  function renderScholarships() {
+    scholarshipGrid.innerHTML = "";
+    const start = (currentPage - 1) * itemsPerPage;
+    const paginated = filtered.slice(start, start + itemsPerPage);
+
+    if (paginated.length === 0) {
+      scholarshipGrid.innerHTML = "<p>No scholarships found.</p>";
+      pagination.innerHTML = "";
+      return;
+    }
+
+    for (let s of paginated) {
+      const daysLeft = Math.ceil((new Date(s.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+      const card = document.createElement('div');
+      card.className = 'scholarship-card';
+      card.innerHTML = `
+        <img src="${s.logoUrl}" alt="Logo">
+        <h3>${s.scholarshipName}</h3>
+        <p><strong>Days Left:</strong> ${daysLeft > 0 ? daysLeft : "Deadline Passed"}</p>
+        <p><strong>Description:</strong> ${s.description.substring(0, 100)}...</p>
+      `;
+      card.onclick = () => openModal(s);
+      scholarshipGrid.appendChild(card);
+    }
+
+    const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    pagination.innerHTML = "";
+    for (let i = 1; i <= totalPages; i++) {
+      pagination.innerHTML += `<button onclick="goToPage(${i})">${i}</button>`;
+    }
+  }
+
+  function goToPage(page) {
+    currentPage = page;
+    renderScholarships();
+  }
+
+  function openModal(s) {
+    const daysLeft = Math.ceil((new Date(s.deadline) - new Date()) / (1000 * 60 * 60 * 24));
+    const marksList = Object.entries(s.marks || {}).map(([k, v]) => `<li>${k}: ${v}%</li>`).join("");
+
+    modalDetails.innerHTML = `
+      <h2>${s.scholarshipName}</h2>
+      <p><strong>Provider:</strong> ${s.providerEmail}</p>
+      <p><strong>Deadline:</strong> ${s.deadline}</p>
+      <p><strong>Days Left:</strong> ${daysLeft > 0 ? daysLeft : "Deadline Passed"}</p>
+      <p><strong>Education Level:</strong> ${s.educationLevel || "Any"}</p>
+      <p><strong>Max Income:</strong> ₹${s.maxIncome || "Any"}</p>
+      <p><strong>Gender:</strong> ${s.gender || "Any"}</p>
+      <p><strong>Age:</strong> ${s.age || "Any"}</p>
+      <p><strong>Caste:</strong> ${s.caste || "Any"}</p>
+      <p><strong>Religion:</strong> ${s.religion || "Any"}</p>
+      <p><strong>State:</strong> ${s.state || "Any"}</p>
+      <p><strong>Description:</strong> ${s.description}</p>
+      <p><strong>Required Marks:</strong></p><ul>${marksList}</ul>
+      <p><a href="${s.applyLink}" target="_blank" style="color: #4b006d; font-weight: bold;">Apply Now</a></p>
+    `;
+    scholarshipModal.style.display = 'block';
+  }
+
+  function closeModal() {
+    scholarshipModal.style.display = 'none';
+  }
+
+  window.onclick = function(event) {
+    if (event.target == scholarshipModal) closeModal();
+  };
+
+  filterOption.addEventListener('change', applyFilters);
+  sortOption.addEventListener('change', applyFilters);
+  searchInput.addEventListener('input', applyFilters);
+
+  fetchScholarships();
+</script>
+</body>
+</html>

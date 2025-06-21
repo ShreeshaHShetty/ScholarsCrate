@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Provider Login / Sign Up - Scholars Crate</title>
+  <link rel="stylesheet" href="css/provider_auth.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: #f8f8ff;
+      padding-top: 70px;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #4b006d;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      z-index: 1000;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-area img {
+      height: 40px;
+      margin-right: 10px;
+    }
+
+    .logo-area h1 {
+      font-size: 1.5rem;
+      color: white;
+      margin: 0;
+      font-weight: 600;
+      font-family: 'Libre Baskerville', serif;
+    }
+
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-weight: 500;
+    }
+
+    .nav-links a:hover {
+      text-decoration: underline;
+    }
+
+    footer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      padding: 15px;
+      background-color: #4b006d;
+      color: white;
+      font-family: 'Libre Baskerville', serif;
+      z-index: 999;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+      }
+
+      .logo-area h1 {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="logo-area">
+      <img src="images/logo.png" alt="logo" class="logo-img" />
+      <h1>Scholars Crate</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="student_auth.html">Student</a>
+      <a class="active" href="provider_auth.html">Provider</a>
+      <a href="admin_login.html">Admin</a>
+    </nav>
+  </header>
+
+  <div class="auth-container">
+    <div class="tabs">
+      <button class="tab-button active" onclick="showTab('login', event)">Login</button>
+      <button class="tab-button" onclick="showTab('signup', event)">Sign Up</button>
+    </div>
+
+    <div id="login" class="form-container active">
+      <form id="loginForm">
+        <label for="loginEmail">Email</label>
+        <input type="email" id="loginEmail" required placeholder="Enter your email" />
+
+        <label for="loginPassword">Password</label>
+        <div class="password-field">
+          <input type="password" id="loginPassword" required minlength="8" placeholder="Enter your password" />
+          <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('loginPassword', this)"></i>
+        </div>
+
+        <div class="error-message" id="loginError"></div>
+        <button type="submit">Login</button>
+      </form>
+    </div>
+
+    <div id="signup" class="form-container">
+      <form id="signupForm">
+        <label for="providerOrg">Organization Name</label>
+        <input type="text" id="providerOrg" required placeholder="Organization name" />
+
+        <label for="providerEmail">Email</label>
+        <input type="email" id="providerEmail" required placeholder="example@provider.com" />
+
+        <label for="providerPhone">Phone Number</label>
+        <input type="tel" id="providerPhone" required pattern="^\+91\d{10}$" placeholder="+911234567890" />
+
+        <label for="providerPassword">Password</label>
+        <div class="password-field">
+          <input type="password" id="providerPassword" required minlength="8" placeholder="Password" />
+          <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('providerPassword', this)"></i>
+        </div>
+
+        <label for="providerConfirmPassword">Confirm Password</label>
+        <div class="password-field">
+          <input type="password" id="providerConfirmPassword" required placeholder="Confirm Password" />
+          <i class="fa-regular fa-eye password-toggle" onclick="togglePassword('providerConfirmPassword', this)"></i>
+        </div>
+
+        <div class="error-message" id="providerErrorMsg"></div>
+        <button type="submit">Sign Up</button>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+  <!-- JS -->
+  <script>
+    function showTab(tab, event) {
+      document.querySelectorAll(".form-container").forEach(el => el.classList.remove("active"));
+      document.querySelectorAll(".tab-button").forEach(el => el.classList.remove("active"));
+      document.getElementById(tab).classList.add("active");
+      event.target.classList.add("active");
+    }
+
+    function togglePassword(fieldId, iconElement) {
+      const field = document.getElementById(fieldId);
+      const isVisible = field.type === "text";
+      field.type = isVisible ? "password" : "text";
+      iconElement.classList.toggle("fa-eye");
+      iconElement.classList.toggle("fa-eye-slash");
+    }
+
+    // LOGIN Handler
+    document.getElementById("loginForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+
+      const res = await fetch("http://localhost:5000/api/provider/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem("providerEmail", email);
+        window.location.href = "provider_dashboard.html";
+      } else {
+        document.getElementById("loginError").textContent = data.error || "Login failed.";
+      }
+    });
+
+    // SIGNUP Handler
+    document.getElementById("signupForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const organizationName = document.getElementById("providerOrg").value;
+      const email = document.getElementById("providerEmail").value;
+      const phone = document.getElementById("providerPhone").value;
+      const password = document.getElementById("providerPassword").value;
+      const confirmPassword = document.getElementById("providerConfirmPassword").value;
+
+      const errorMsg = document.getElementById("providerErrorMsg");
+
+      if (password !== confirmPassword) {
+        errorMsg.style.color = "red";
+        errorMsg.textContent = "Passwords do not match.";
+        return;
+      }
+
+      const res = await fetch("http://localhost:5000/api/provider/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ organizationName, email, phone, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        errorMsg.style.color = "green";
+        errorMsg.textContent = "Signup successful! Awaiting admin approval.";
+        document.getElementById("signupForm").reset();
+      } else {
+        errorMsg.style.color = "red";
+        errorMsg.textContent = data.error || "Signup failed.";
+      }
+    });
+  </script>
+</body>
+</html>

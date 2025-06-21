@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Scholars Crate</title>
+  <link rel="stylesheet" href="css/style.css" />
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&family=Open+Sans&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+</head>
+
+<body>
+
+  <header class="main-header">
+    <div class="logo-area">
+      <img src="images/logo.png" alt="logo" class="logo-img" />
+      <h1>Scholars Crate</h1>
+    </div>
+    <nav class="nav-links">
+      <a class="active" href="index.html">Home</a>
+      <a href="student_auth.html">Student</a>
+      <a href="provider_auth.html">Provider</a>
+      <a href="admin_login.html">Admin</a>
+    </nav>
+  </header>
+
+  <section class="hero-banner">
+    <div class="hero-text">
+      <h2>"Empowering Dreams Through Scholarships"</h2>
+      <button onclick="openModal()">Get Started</button>
+    </div>
+  </section>
+
+  <div id="popupModal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h3>You are</h3>
+      <button onclick="location.href='student_auth.html'">Student</button>
+      <button onclick="location.href='provider_auth.html'">Provider</button>
+    </div>
+  </div>
+
+  <section class="steps-section" id="steps">
+    <h2 class="section-title">Steps to Get a Scholarship</h2>
+    <div class="steps-container">
+      <div class="step-card" data-aos="fade-up">
+        <img src="images/icon1.png" alt="Register Icon" />
+        <h3>Register & Create Profile</h3>
+        <p>Quickly sign up, add your details, and unlock personalized scholarship opportunities tailored to you.</p>
+      </div>
+      <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+        <img src="images/icon2.png" alt="Search Icon" />
+        <h3>Search Scholarships</h3>
+        <p>Filter and find scholarships that match your profile — academic, financial, or category-based.</p>
+      </div>
+      <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+        <img src="images/icon3.png" alt="Apply Icon" />
+        <h3>Apply for Scholarships</h3>
+        <p>Submit your applications effortlessly.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <h2>What Students Say</h2>
+    <div class="testimonial-boxes">
+      <div class="testimonial" data-aos="fade-up">
+        <p>"Scholars Crate helped me find a perfect scholarship within minutes!"</p>
+        <h4>- Aishwarya, BMSCE</h4>
+      </div>
+      <div class="testimonial" data-aos="fade-up" data-aos-delay="100">
+        <p>"The eligibility filter is a game changer. No more endless searching!"</p>
+        <h4>- Rahul, PES University</h4>
+      </div>
+      <div class="testimonial" data-aos="fade-up" data-aos-delay="200">
+        <p>"Clean UI, fast access, and trusted scholarships. Love it!"</p>
+        <h4>- Sneha, RVCE</h4>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ duration: 800, once: true });
+    function openModal() {
+      document.getElementById('popupModal').style.display = 'flex';
+    }
+    function closeModal() {
+      document.getElementById('popupModal').style.display = 'none';
+    }
+    window.onclick = function (event) {
+      const modal = document.getElementById('popupModal');
+      if (event.target === modal) {
+        closeModal();
+      }
+    };
+  </script>
+
+</body>
+</html>
