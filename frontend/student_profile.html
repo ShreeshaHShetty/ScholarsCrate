@@ -238,7 +238,7 @@
       updated.marks[label] = parseFloat(document.getElementById(label).value);
     });
 
-    const res = await fetch("http://localhost:5000/api/student/update", {
+    const res = await fetch("https://scholarscrate.onrender.com/api/student/update", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: student.email, updated })
@@ -246,7 +246,6 @@
 
     const result = await res.json();
     if (res.ok) {
-      alert("Profile updated!");
       localStorage.setItem("studentData", JSON.stringify(result));
       location.reload();
     } else {
@@ -262,7 +261,7 @@
 
     if (newPassword !== confirm) return alert("Passwords do not match!");
 
-    const res = await fetch("http://localhost:5000/api/student/change-password", {
+    const res = await fetch("https://scholarscrate.onrender.com/api/student/change-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: student.email, oldPassword, newPassword })

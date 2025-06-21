@@ -231,7 +231,7 @@
   <p>&copy; 2023 Scholars Crate | All rights reserved.</p>
 </footer>
 
-<!-- Modal -->
+
 <div class="modal" id="scholarshipModal">
   <div class="modal-content">
     <span class="close-btn" onclick="closeModal()">&times;</span>
@@ -255,7 +255,7 @@
   const student = JSON.parse(localStorage.getItem('studentData'));
 
   async function fetchScholarships() {
-    const res = await fetch('http://localhost:5000/api/scholarships');
+    const res = await fetch('https://scholarscrate.onrender.com/api/scholarships');
     scholarships = await res.json();
     applyFilters();
   }

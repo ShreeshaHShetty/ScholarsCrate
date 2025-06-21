@@ -296,7 +296,7 @@
 
     async function loadScholarships() {
       try {
-        const res = await fetch(`http://localhost:5000/api/scholarships/by-provider?email=${email}`);
+        const res = await fetch(`https://scholarscrate.onrender.com/api/scholarships/by-provider?email=${email}`);
         scholarships = await res.json();
 
         container.innerHTML = "";
@@ -395,7 +395,7 @@
         marks
       };
 
-      const res = await fetch(`http://localhost:5000/api/scholarships/update/${id}`, {
+      const res = await fetch(`https://scholarscrate.onrender.com/api/scholarships/update/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updated)
@@ -407,7 +407,7 @@
     });
 
     async function deleteScholarship(id) {
-      const res = await fetch(`http://localhost:5000/api/scholarships/delete/${id}`, { method: "DELETE" });
+      const res = await fetch(`https://scholarscrate.onrender.com/api/scholarships/delete/${id}`, { method: "DELETE" });
       loadScholarships();
     }
 

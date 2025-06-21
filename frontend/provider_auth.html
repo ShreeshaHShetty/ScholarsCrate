@@ -181,7 +181,7 @@
       const email = document.getElementById("loginEmail").value;
       const password = document.getElementById("loginPassword").value;
 
-      const res = await fetch("http://localhost:5000/api/provider/login", {
+      const res = await fetch("https://scholarscrate.onrender.com/api/provider/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -216,7 +216,7 @@
         return;
       }
 
-      const res = await fetch("http://localhost:5000/api/provider/signup", {
+      const res = await fetch("https://scholarscrate.onrender.com/api/provider/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

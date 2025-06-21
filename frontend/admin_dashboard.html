@@ -171,7 +171,7 @@
 
   <script>
     async function fetchPendingProviders() {
-      const res = await fetch('http://localhost:5000/api/admin/pending-providers');
+      const res = await fetch('https://scholarscrate.onrender.com/api/admin/pending-providers');
       const data = await res.json();
 
       const container = document.getElementById("providerList");
@@ -197,7 +197,7 @@
     }
 
     async function approveProvider(id, button) {
-      const res = await fetch(`http://localhost:5000/api/admin/approve-provider/${id}`, {
+      const res = await fetch(`https://scholarscrate.onrender.com/api/admin/approve-provider/${id}`, {
         method: 'PUT'
       });
 
@@ -210,7 +210,7 @@
     }
 
     async function rejectProvider(id, button) {
-      const res = await fetch(`http://localhost:5000/api/admin/reject-provider/${id}`, {
+      const res = await fetch(`https://scholarscrate.onrender.com/api/admin/reject-provider/${id}`, {
         method: 'DELETE'
       });
 

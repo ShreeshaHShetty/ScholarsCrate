@@ -199,7 +199,7 @@
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/api/provider/profile?email=${email}`);
+        const res = await fetch(`https://scholarscrate.onrender.com/api/provider/profile?email=${email}`);
         const data = await res.json();
 
         if (res.ok) {
@@ -223,7 +223,7 @@
       const phone = document.getElementById("phone").value.trim();
 
       try {
-        const res = await fetch(`http://localhost:5000/api/provider/update?email=${email}`, {
+        const res = await fetch(`https://scholarscrate.onrender.com/api/provider/update?email=${email}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ organizationName: orgName, phone })
@@ -265,7 +265,7 @@
       }
 
       try {
-        const res = await fetch(`http://localhost:5000/api/provider/change-password?email=${email}`, {
+        const res = await fetch(`https://scholarscrate.onrender.com/api/provider/change-password?email=${email}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ currentPassword, newPassword })
