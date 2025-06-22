@@ -67,12 +67,10 @@
 
 ### 🎓 Student Dashboard with Filters
 ![Student Dashboard](screenshots/student_dashboard1.png)
-![Student Dashboard](screenshots/student_dashboard2.png)
+
 
 ### 🧑‍🏫 Provider Dashboard
 ![Provider Dashboard](screenshots/provider_dashboard1.png)
-![Provider Dashboard](screenshots/provider_dashboard2.png)
-![Provider Dashboard](screenshots/provider_dashboard3.png)
 
 ### 👨‍💼 Admin Panel
 ![Admin Panel](screenshots/admin_dashboard1.png)
