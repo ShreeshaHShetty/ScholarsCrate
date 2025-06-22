@@ -66,7 +66,7 @@
 ![Admin Login](screenshots/admin_login.png)
 
 ### 🎓 Student Dashboard with Filters
-![Student Dashboard](screenshots/student_dashboard1.png)
+![Student Dashboard](screenshots/student_dashboaed1.png)
 
 
 ### 🧑‍🏫 Provider Dashboard
