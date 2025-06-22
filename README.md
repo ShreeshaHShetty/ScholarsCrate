@@ -73,7 +73,7 @@
 ![Provider Dashboard](screenshots/provider_dashboard1.png)
 
 ### 👨‍💼 Admin Panel
-![Admin Panel](screenshots/admin_dashboard1.png)
+![Admin Panel](screenshots/admin_dashboard.png)
 
 
 ---
